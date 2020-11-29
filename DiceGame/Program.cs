@@ -6,7 +6,8 @@ namespace DiceGame
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var game = new DiceGame();
+            game.Run();
         }
     }
 }
