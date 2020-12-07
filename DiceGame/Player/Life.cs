@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
 using DiceGame.Utils;
 using Microsoft.Xna.Framework;
@@ -6,21 +6,41 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DiceGame.Player
 {
-    public class Dice: GameElement
-    {
-        private static readonly int WIDHT = 32;
-        private static readonly int HEIGHT = 32;
+    public class Life : GameElement
+    { 
+        public static List<Life> FULL_LIFE = new List<Life>()
+        {
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life(),
+            new Life()
+        };
         
         private SpriteBatch spriteBatch;
+
         public string image { get; set; }
         public Texture2D texture { get; set; }
         public Vector2i position { get; set; }
-        public DiceType type { get; set; }
 
-        public Dice(DiceType type)
+        public Life()
         {
-            this.image = "icon_distance_block.png";
-            this.type = type;
+            this.image = "icon_life.png";
             this.position = new Vector2i();
         }
 
@@ -32,7 +52,7 @@ namespace DiceGame.Player
             texture = Texture2D.FromStream(graphicsDevice, stream);
             stream.Close();
         }
-        
+
         public void draw()
         {
             spriteBatch.Draw(texture, new Rectangle(position.x, position.y, 48, 48), Color.White);
@@ -40,22 +60,6 @@ namespace DiceGame.Player
 
         public void update()
         {
-            
-        }
-
-        public class DiceType
-        {
-            public static readonly DiceType MALE_ATTACK = new DiceType("icon_male_attack.png");
-            public static readonly DiceType DISTANCE_ATTACK = new DiceType("icon_distance_attack.png");
-            public static readonly DiceType MALE_BLOCK = new DiceType("icon_male_block.png");
-            public static readonly DiceType DISTANCE_BLOCK = new DiceType("icon_distance_block.png");
-
-            private string icon;
-
-            public DiceType(string icon)
-            {
-                this.icon = icon;
-            }
         }
     }
 }
