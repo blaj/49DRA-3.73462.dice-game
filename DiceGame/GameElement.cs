@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using DiceGame.Utils;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DiceGame
 {

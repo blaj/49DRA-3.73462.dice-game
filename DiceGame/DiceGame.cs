@@ -28,21 +28,17 @@ namespace DiceGame
             graphicsDeviceManager.PreferredBackBufferHeight = Config.Config.WINDOW_HEIGHT;
             graphicsDeviceManager.ApplyChanges();
 
-            table = new Table();
-            player = new Player.Player();
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            table.loadContent(GraphicsDevice, spriteBatch);
-            player.loadContent(GraphicsDevice, spriteBatch);
+            AssetManager.loadTextures(GraphicsDevice);
+            floorTexture = AssetManager.floorTexture;
             
-            var stream = new FileStream("Content/floor.png", FileMode.Open);
-            floorTexture = Texture2D.FromStream(GraphicsDevice, stream);
-            stream.Close();
+            table = new Table();
+            player = new Player.Player();
         }
 
         protected override void Draw(GameTime gameTime)
@@ -53,8 +49,8 @@ namespace DiceGame
             try
             {
                 drawFloor(GraphicsDevice, spriteBatch);
-                table.draw();
-                player.draw();
+                table.draw(spriteBatch);
+                player.draw(spriteBatch);
             }
             finally
             {

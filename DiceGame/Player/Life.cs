@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DiceGame.Player
 {
-    public class Life : GameElement
+    public class Life
     { 
         public static List<Life> FULL_LIFE = new List<Life>()
         {
@@ -28,38 +28,27 @@ namespace DiceGame.Player
             new Life(),
             new Life(),
             new Life(),
-            new Life(),
-            new Life()
         };
         
         private SpriteBatch spriteBatch;
 
-        public string image { get; set; }
         public Texture2D texture { get; set; }
         public Vector2i position { get; set; }
 
         public Life()
         {
-            this.image = "icon_life.png";
+            this.texture = AssetManager.lifeTexture;
             this.position = new Vector2i();
         }
 
-        public void loadContent(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        public void draw(SpriteBatch spriteBatch)
         {
-            this.spriteBatch = spriteBatch;
-            
-            var stream = new FileStream("Content/" + this.image, FileMode.Open);
-            texture = Texture2D.FromStream(graphicsDevice, stream);
-            stream.Close();
+            spriteBatch.Draw(texture, new Rectangle(position.x, position.y, 32, 32), Color.White);
         }
 
-        public void draw()
+        public void update(Vector2i position)
         {
-            spriteBatch.Draw(texture, new Rectangle(position.x, position.y, 48, 48), Color.White);
-        }
-
-        public void update()
-        {
+            this.position = position;
         }
     }
 }

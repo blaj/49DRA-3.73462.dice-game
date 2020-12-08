@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DiceGame.Utils;
 using Microsoft.Xna.Framework;
@@ -6,55 +7,50 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DiceGame.Player
 {
-    public class Dice: GameElement
+    public class Dice
     {
         private static readonly int WIDHT = 32;
         private static readonly int HEIGHT = 32;
         
-        private SpriteBatch spriteBatch;
-        public string image { get; set; }
-        public Texture2D texture { get; set; }
         public Vector2i position { get; set; }
         public DiceType type { get; set; }
 
         public Dice(DiceType type)
         {
-            this.image = "icon_distance_block.png";
             this.type = type;
             this.position = new Vector2i();
         }
 
-        public void loadContent(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        public void draw(SpriteBatch spriteBatch)
         {
-            this.spriteBatch = spriteBatch;
-            
-            var stream = new FileStream("Content/" + this.image, FileMode.Open);
-            texture = Texture2D.FromStream(graphicsDevice, stream);
-            stream.Close();
-        }
-        
-        public void draw()
-        {
-            spriteBatch.Draw(texture, new Rectangle(position.x, position.y, 48, 48), Color.White);
+            spriteBatch.Draw(type.texture, new Rectangle(position.x, position.y, 48, 48), Color.White);
         }
 
-        public void update()
+        public void update(Vector2i position)
         {
-            
+            this.position = position;
         }
 
         public class DiceType
         {
-            public static readonly DiceType MALE_ATTACK = new DiceType("icon_male_attack.png");
-            public static readonly DiceType DISTANCE_ATTACK = new DiceType("icon_distance_attack.png");
-            public static readonly DiceType MALE_BLOCK = new DiceType("icon_male_block.png");
-            public static readonly DiceType DISTANCE_BLOCK = new DiceType("icon_distance_block.png");
+            public static readonly DiceType MALE_ATTACK = new DiceType(AssetManager.diceMaleAttackTexture);
+            public static readonly DiceType DISTANCE_ATTACK = new DiceType(AssetManager.diceDistanceAttackTexture);
+            public static readonly DiceType MALE_BLOCK = new DiceType(AssetManager.diceMaleBlockTexture);
+            public static readonly DiceType DISTANCE_BLOCK = new DiceType(AssetManager.diceDistanceBlockTexture);
 
-            private string icon;
-
-            public DiceType(string icon)
+            public static readonly List<DiceType> TYPES = new List<DiceType>()
             {
-                this.icon = icon;
+                MALE_ATTACK,
+                MALE_BLOCK,
+                DISTANCE_ATTACK,
+                DISTANCE_BLOCK,
+            };
+            
+            public Texture2D texture { get; set; }
+
+            public DiceType(Texture2D texture)
+            {
+                this.texture = texture;
             }
         }
     }
