@@ -10,16 +10,21 @@ namespace DiceGame
         public static Texture2D diceDistanceBlockTexture;
         public static Texture2D diceMaleAttackTexture;
         public static Texture2D diceMaleBlockTexture;
+        
+        public static Texture2D diceHoverTexture;
+        
         public static Texture2D tableTexture;
         public static Texture2D floorTexture;
         public static Texture2D lifeTexture;
-        
+
         public static void loadTextures(GraphicsDevice graphicsDevice)
         {
             diceDistanceAttackTexture = makeTexture("icon_distance_attack.png", graphicsDevice);
             diceDistanceBlockTexture = makeTexture("icon_distance_block.png", graphicsDevice);
             diceMaleAttackTexture = makeTexture("icon_male_attack.png", graphicsDevice);
             diceMaleBlockTexture = makeTexture("icon_male_block.png", graphicsDevice);
+            
+            diceHoverTexture = makeTexture("dice_selected.png", graphicsDevice);
             
             tableTexture = makeTexture("table.png", graphicsDevice);
             floorTexture = makeTexture("floor.png", graphicsDevice);

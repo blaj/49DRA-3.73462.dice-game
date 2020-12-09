@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using DiceGame.Utils;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace DiceGame.Player
 {
-    public class Player: Entity
+    public class Player : Entity
     {
         public Player()
         {
@@ -16,7 +15,7 @@ namespace DiceGame.Player
             diceOnTable = new List<Dice>();
             lifes = Life.FULL_LIFE;
 
-            shuffleDice();
+            shuffleDice(true);
         }
 
         public void draw(SpriteBatch spriteBatch)
@@ -39,11 +38,9 @@ namespace DiceGame.Player
 
         public void update()
         {
-            var mouseState = Mouse.GetState();
-
-            if (mouseState.LeftButton == ButtonState.Pressed)
+            if (DiceGame.inputHelper.IsNewKeyPress(Keys.Space))
             {
-                shuffleDice();
+                shuffleDice(false);
             }
             
             diceOnHand.Select((x, i) => new
@@ -52,6 +49,17 @@ namespace DiceGame.Player
                 index = i
             }).ToList().ForEach(dice =>
             {
+                var mouseState = Mouse.GetState();
+                var isIntersect = dice.item.isIntersect(mouseState.X, mouseState.Y);
+
+                if (DiceGame.inputHelper.IsNewLeftClick() && isIntersect)
+                {
+                    diceOnHand.Remove(dice.item);
+                    diceOnTable.Add(dice.item);
+                    isIntersect = false;
+                }
+
+                dice.item.isHovered = isIntersect;
                 dice.item.update(getDiceOnHandPosition(dice.index));
             });
 
@@ -59,19 +67,13 @@ namespace DiceGame.Player
             {
                 item = x,
                 index = i
-            }).ToList().ForEach(dice =>
-            {
-                dice.item.update(getDiceOnTablePosition(dice.index));
-            });
+            }).ToList().ForEach(dice => { dice.item.update(getDiceOnTablePosition(dice.index)); });
 
             lifes.Select((x, i) => new
             {
                 item = x,
                 index = i
-            }).ToList().ForEach(life =>
-            {
-                life.item.update(getLifePosition(life.index));
-            });
+            }).ToList().ForEach(life => { life.item.update(getLifePosition(life.index)); });
         }
 
         private Vector2i getLifePosition(int currentIteration)
@@ -96,7 +98,7 @@ namespace DiceGame.Player
             {
                 x -= 56 * ((currentIteration + 1) / 2);
             }
-            
+
             var y = Config.Config.WINDOW_HEIGHT - 96 - 32;
             return new Vector2i(x, y);
         }
@@ -113,32 +115,30 @@ namespace DiceGame.Player
             {
                 x -= 56 * ((currentIteration + 1) / 2);
             }
-            
+
             var y = Config.Config.WINDOW_HEIGHT / 2 + 128;
             return new Vector2i(x, y);
         }
 
-        private void shuffleDice()
+        private void shuffleDice(bool isInit)
         {
-            diceOnHand = new List<Dice>()
+            if (isInit)
             {
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-            };
-            
-            diceOnTable = new List<Dice>()
+                diceOnHand = new List<Dice>()
+                {
+                    new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
+                    new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
+                    new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
+                    new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
+                    new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
+                    new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
+                };
+            }
+            else
             {
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-                new Dice(Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count))),
-            };
+                diceOnHand.ForEach(dice =>
+                    dice.type = Dice.DiceType.TYPES.ElementAt(new Random().Next(0, Dice.DiceType.TYPES.Count)));
+            }
         }
     }
 }

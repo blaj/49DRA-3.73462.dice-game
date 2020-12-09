@@ -1,34 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using DiceGame.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace DiceGame.Player
 {
     public class Dice
     {
-        private static readonly int WIDHT = 32;
-        private static readonly int HEIGHT = 32;
-        
         public Vector2i position { get; set; }
+
+        public Rectangle rectangle;
+
         public DiceType type { get; set; }
+        public bool isHovered { get; set; }
 
         public Dice(DiceType type)
         {
-            this.type = type;
             this.position = new Vector2i();
+            this.rectangle = new Rectangle(position.x, position.y, 48, 48);
+            this.type = type;
+            this.isHovered = false;
         }
 
         public void draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(type.texture, new Rectangle(position.x, position.y, 48, 48), Color.White);
+            spriteBatch.Draw(type.texture, rectangle, Color.White);
+
+            if (isHovered)
+            {
+                spriteBatch.Draw(AssetManager.diceHoverTexture, rectangle, Color.White);
+            }
         }
 
         public void update(Vector2i position)
         {
             this.position = position;
+            this.rectangle.X = position.x;
+            this.rectangle.Y = position.y;
+        }
+
+        public bool isIntersect(int x, int y)
+        {
+            return x > rectangle.X && x < rectangle.X + rectangle.Width && y > rectangle.Y &&
+                   y < rectangle.Y + rectangle.Height;
         }
 
         public class DiceType

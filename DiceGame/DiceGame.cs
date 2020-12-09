@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using DiceGame.Helpers;
 using DiceGame.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +16,8 @@ namespace DiceGame
 
         private Texture2D floorTexture;
 
+        public static InputHelper inputHelper;
+
         public DiceGame()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -27,6 +30,7 @@ namespace DiceGame
             graphicsDeviceManager.PreferredBackBufferWidth = Config.Config.WINDOW_WIDHT;
             graphicsDeviceManager.PreferredBackBufferHeight = Config.Config.WINDOW_HEIGHT;
             graphicsDeviceManager.ApplyChanges();
+            IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -37,6 +41,8 @@ namespace DiceGame
             AssetManager.loadTextures(GraphicsDevice);
             floorTexture = AssetManager.floorTexture;
             
+            inputHelper = new InputHelper(this);
+
             table = new Table();
             player = new Player.Player();
         }
