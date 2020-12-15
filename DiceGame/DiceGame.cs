@@ -1,35 +1,34 @@
-﻿using System.IO;
+﻿using DiceGame.Engine;
+using DiceGame.Game;
 using DiceGame.Helpers;
-using DiceGame.Player;
+using DiceGame.MainMenu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DiceGame
 {
-    public class DiceGame : Game
+    public class DiceGame : Microsoft.Xna.Framework.Game
     {
-        private GraphicsDeviceManager graphicsDeviceManager;
-        private SpriteBatch spriteBatch;
-
-        private Table table;
-        private Player.Player player;
-
-        private Texture2D floorTexture;
+        private readonly GraphicsDeviceManager _graphicsDeviceManager;
+        private SpriteBatch _spriteBatch;
 
         public static InputHelper inputHelper;
 
+        private State _currentState;
+        private State _nextState;
+
         public DiceGame()
         {
-            graphicsDeviceManager = new GraphicsDeviceManager(this);
+            _graphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-        
+
         protected override void Initialize()
         {
-            graphicsDeviceManager.IsFullScreen = false;
-            graphicsDeviceManager.PreferredBackBufferWidth = Config.Config.WINDOW_WIDHT;
-            graphicsDeviceManager.PreferredBackBufferHeight = Config.Config.WINDOW_HEIGHT;
-            graphicsDeviceManager.ApplyChanges();
+            _graphicsDeviceManager.IsFullScreen = false;
+            _graphicsDeviceManager.PreferredBackBufferWidth = Config.Config.WINDOW_WIDHT;
+            _graphicsDeviceManager.PreferredBackBufferHeight = Config.Config.WINDOW_HEIGHT;
+            _graphicsDeviceManager.ApplyChanges();
             IsMouseVisible = true;
 
             base.Initialize();
@@ -37,64 +36,50 @@ namespace DiceGame
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            AssetManager.loadTextures(GraphicsDevice);
-            floorTexture = AssetManager.floorTexture;
-            
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             inputHelper = new InputHelper(this);
 
-            table = new Table();
-            player = new Player.Player();
+            AssetManager.loadTextures(Content);
+            AssetManager.loadAudios(Content);
+            AssetManager.loadFonts(Content);
+
+            _currentState = new MainMenuState(this, GraphicsDevice, Content, inputHelper);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
-            graphicsDeviceManager.GraphicsDevice.Clear(Color.Aquamarine);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+            _graphicsDeviceManager.GraphicsDevice.Clear(Color.Aquamarine);
 
             try
             {
-                drawFloor(GraphicsDevice, spriteBatch);
-                table.draw(spriteBatch);
-                player.draw(spriteBatch);
+                _currentState.Draw(gameTime, _spriteBatch);
             }
             finally
             {
-                spriteBatch.End();
+                _spriteBatch.End();
             }
-            
+
             base.Draw(gameTime);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            table.update();
-            player.update();
+            if (_nextState != null)
+            {
+                _currentState = _nextState;
+                _nextState = null;
+            }
+            
+            _currentState.Update(gameTime);
             
             base.Update(gameTime);
         }
-
-        private void drawFloor(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        
+        public void ChangeState(State state)
         {
-            var amountWidth = Config.Config.WINDOW_WIDHT / 128;
-            var amountHeight = Config.Config.WINDOW_HEIGHT / 128;
-            
-            for (int i = 0; i <= amountWidth; i++)
-            {
-                for (int j = 0; j <= amountHeight; j++)
-                {
-                    var x = i * 128;
-                    var y = j * 128;
-                    spriteBatch.Draw(
-                        floorTexture, 
-                        new Rectangle(
-                            x,
-                            y,
-                            128,
-                            128),
-                        Color.White);
-                }
-            }
+            _currentState.Delete();
+            _nextState = state;
         }
     }
 }
