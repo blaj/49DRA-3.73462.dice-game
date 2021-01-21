@@ -13,6 +13,7 @@ namespace DiceGame.Player
             lifePosition = new Vector2i(Config.Config.WINDOW_WIDHT - 280, 128);
             diceOnHandPosition = new Vector2i(Config.Config.WINDOW_WIDHT / 2, 96);
             diceOnTablePosition = new Vector2i(Config.Config.WINDOW_WIDHT / 2, 128);
+            isYourTurn = true;
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {

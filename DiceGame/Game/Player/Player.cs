@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DiceGame.Helpers;
 using DiceGame.Utils;
 using Microsoft.Xna.Framework;
@@ -14,7 +15,7 @@ namespace DiceGame.Player
             lifePosition = new Vector2i(64, Config.Config.WINDOW_HEIGHT - 96);
             diceOnHandPosition = new Vector2i(Config.Config.WINDOW_WIDHT / 2, Config.Config.WINDOW_HEIGHT - 96);
             diceOnTablePosition = new Vector2i(Config.Config.WINDOW_WIDHT / 2, Config.Config.WINDOW_HEIGHT / 2 + 128);
-            isYourTurn = true;
+            isYourTurn = false;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -25,7 +26,7 @@ namespace DiceGame.Player
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
+
             DiceOnHand.Select((x, i) => new
             {
                 item = x,
@@ -46,7 +47,7 @@ namespace DiceGame.Player
             var mouseState = Mouse.GetState();
             var isIntersect = dice.isIntersect(mouseState.X, mouseState.Y);
 
-            if (DiceGame.inputHelper.IsNewLeftClick() && isIntersect)
+            if (InputHelper.IsNewLeftClick() && isIntersect)
             {
                 AssetManager.diceClickAudio.Play();
                 DiceOnHand.Remove(dice);

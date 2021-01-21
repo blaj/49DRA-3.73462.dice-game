@@ -15,37 +15,36 @@ namespace DiceGame.MainMenu
     {
         private List<GameElement> _gameElements;
 
-        public MainMenuState(DiceGame diceGame, GraphicsDevice graphicsDevice, ContentManager contentManager,
-            InputHelper inputHelper) : base(
-            diceGame, graphicsDevice, contentManager, inputHelper)
+        public MainMenuState(DiceGame diceGame, GraphicsDevice graphicsDevice, ContentManager contentManager)
+            : base(diceGame, graphicsDevice, contentManager)
         {
             MediaPlayer.Play(AssetManager.mainMenuAudio);
 
             var centerOfScreen = Config.Config.WINDOW_WIDHT / 2;
-            
+
             var newGameButton = new Button(AssetManager.buttonTexture, AssetManager.pressStartFont)
             {
                 Position = new Vector2i(centerOfScreen, 300),
-                Text = "New game",
+                Text = "Nowa gra",
                 IsDrawStartCenter = true
             };
             newGameButton.Click += newGameButtonClickEvent;
-            
+
             var exitButton = new Button(AssetManager.buttonTexture, AssetManager.pressStartFont)
             {
                 Position = new Vector2i(centerOfScreen, 400),
-                Text = "Quit game",
+                Text = "Wyjdz z gry",
                 IsDrawStartCenter = true
             };
             exitButton.Click += exitButtonClickEvent;
-            
+
             var gameNameText = new Text(AssetManager.pressStartFont)
             {
                 Position = new Vector2i(centerOfScreen, 64),
                 TextString = "DiceGame",
                 IsDrawStartCenter = true
             };
-            
+
             _gameElements = new List<GameElement>()
             {
                 newGameButton,
@@ -71,7 +70,7 @@ namespace DiceGame.MainMenu
 
         private void newGameButtonClickEvent(object sender, EventArgs eventArgs)
         {
-            _diceGame.ChangeState(new GameState(_diceGame, _graphicsDevice, _contentManager, _inputHelper));
+            _diceGame.ChangeState(new GameState(_diceGame, _graphicsDevice, _contentManager));
         }
 
         private void exitButtonClickEvent(object sender, EventArgs eventArgs)

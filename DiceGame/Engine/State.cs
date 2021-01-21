@@ -10,14 +10,12 @@ namespace DiceGame.Engine
         protected DiceGame _diceGame;
         protected ContentManager _contentManager;
         protected GraphicsDevice _graphicsDevice;
-        protected InputHelper _inputHelper;
 
-        public State(DiceGame diceGame, GraphicsDevice graphicsDevice, ContentManager contentManager, InputHelper inputHelper)
+        public State(DiceGame diceGame, GraphicsDevice graphicsDevice, ContentManager contentManager)
         {
             _diceGame = diceGame;
             _graphicsDevice = graphicsDevice;
             _contentManager = contentManager;
-            _inputHelper = inputHelper;
         }
         
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);

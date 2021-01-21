@@ -12,8 +12,6 @@ namespace DiceGame
         private readonly GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
 
-        public static InputHelper inputHelper;
-
         private State _currentState;
         private State _nextState;
 
@@ -37,13 +35,12 @@ namespace DiceGame
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            inputHelper = new InputHelper(this);
 
-            AssetManager.loadTextures(Content);
+            AssetManager.loadTextures(Content, GraphicsDevice);
             AssetManager.loadAudios(Content);
             AssetManager.loadFonts(Content);
 
-            _currentState = new MainMenuState(this, GraphicsDevice, Content, inputHelper);
+            _currentState = new MainMenuState(this, GraphicsDevice, Content);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -65,6 +62,8 @@ namespace DiceGame
 
         protected override void Update(GameTime gameTime)
         {
+            InputHelper.UpdateStates();
+            
             if (_nextState != null)
             {
                 _currentState = _nextState;

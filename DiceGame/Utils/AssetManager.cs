@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Audio;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
@@ -17,6 +18,7 @@ namespace DiceGame
         public static Texture2D tableTexture;
         public static Texture2D floorTexture;
         public static Texture2D lifeTexture;
+        public static Texture2D blackTexture;
 
         public static Texture2D buttonTexture;
 
@@ -28,7 +30,7 @@ namespace DiceGame
         public static SpriteFont arialFont;
         public static SpriteFont pressStartFont;
 
-        public static void loadTextures(ContentManager content)
+        public static void loadTextures(ContentManager content, GraphicsDevice graphicsDevice)
         {
             diceDistanceAttackTexture = content.Load<Texture2D>("Sprites/Dice/DiceDistanceAttack");
             diceDistanceBlockTexture = content.Load<Texture2D>("Sprites/Dice/DiceDistanceBlock");
@@ -40,6 +42,9 @@ namespace DiceGame
             tableTexture = content.Load<Texture2D>("Sprites/Table");
             floorTexture = content.Load<Texture2D>("Sprites/Floor");
             lifeTexture = content.Load<Texture2D>("Sprites/PlayerLife");
+            
+            blackTexture = new Texture2D(graphicsDevice, 1, 1);
+            blackTexture.SetData(new[] { Color.Black });
 
             buttonTexture = content.Load<Texture2D>("Sprites/Button");
         }

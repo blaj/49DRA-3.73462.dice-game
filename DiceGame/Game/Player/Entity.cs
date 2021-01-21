@@ -10,9 +10,9 @@ namespace DiceGame.Player
 {
     public abstract class Entity: GameElement
     {
-        protected List<Dice> DiceOnHand;
-        protected List<Dice> DiceOnTable;
-        protected List<Life> Lifes;
+        public List<Dice> DiceOnHand;
+        public List<Dice> DiceOnTable;
+        public List<Life> Lifes { get; set; }
 
         protected List<GameElement> GameElements
         {
@@ -74,7 +74,7 @@ namespace DiceGame.Player
                 index = i
             }).ToList().ForEach(dice =>
             {
-                dice.item.Position = getDiceOnTablePosition(dice.index);
+                dice.item.TargetPosition = getDiceOnTablePosition(dice.index);
             });
             
             Lifes.Select((x, i) => new
@@ -131,7 +131,7 @@ namespace DiceGame.Player
             return new Vector2i(x, y);
         }
 
-        private void shuffleDice(bool isInit)
+        public void shuffleDice(bool isInit)
         {
             if (!isShuffleDice)
             {

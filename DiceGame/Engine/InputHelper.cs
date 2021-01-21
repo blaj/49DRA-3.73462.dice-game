@@ -4,59 +4,57 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DiceGame.Helpers
 {
-    public class InputHelper: GameComponent
+    public class InputHelper
     {
-        private KeyboardState currentKeyboardState;
-        private KeyboardState lastKeyboardState;
-        private MouseState lastMouseState;
-        private MouseState currentMouseState;
+        private static KeyboardState currentKeyboardState = new KeyboardState();
+        private static KeyboardState lastKeyboardState = new KeyboardState();
+        private static MouseState lastMouseState = new MouseState();
+        private static MouseState currentMouseState = new MouseState();
 
-        public InputHelper(Microsoft.Xna.Framework.Game game) : base(game)
-        {
-            game.Components.Add(this);
-
-            currentKeyboardState = new KeyboardState();
-            lastKeyboardState = new KeyboardState();
-            currentMouseState = new MouseState();
-            lastMouseState = new MouseState();
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            lastKeyboardState = currentKeyboardState;
-            currentKeyboardState = Keyboard.GetState();
-            lastMouseState = currentMouseState;
-            currentMouseState = Mouse.GetState();
-
-            base.Update(gameTime);
-        }
-
-        public bool IsNewLeftClick()
+        public static bool IsNewLeftClick()
         {
             return currentMouseState.LeftButton == ButtonState.Pressed &&
                    lastMouseState.LeftButton == ButtonState.Released;
         }
 
-        public bool IsNewRightClick()
+        public static bool IsNewRightClick()
         {
             return currentMouseState.RightButton == ButtonState.Pressed &&
                    lastMouseState.RightButton == ButtonState.Released;
         }
 
-        public Point GetMousePosition()
+        public static Point GetMousePosition()
         {
             return new Point(currentMouseState.X, currentMouseState.Y);    
         }
 
-        public bool IsNewKeyPress(params Keys[] keys)
+        public static bool IsNewKeyPress(params Keys[] keys)
         {
             return keys.Any(k => (currentKeyboardState.IsKeyDown(k) &&
                                   lastKeyboardState.IsKeyUp(k)));
         }
 
-        public bool IsCurrentlyPressed(params Keys[] keys)
+        public static bool IsCurrentlyPressed(params Keys[] keys)
         {
             return keys.Any(k => currentKeyboardState.IsKeyDown(k));
+        }
+
+        public static void UpdateStates()
+        {
+            UpdateKeyboardState();
+            UpdateMouseState();
+        }
+        
+        private static void UpdateKeyboardState()
+        {
+            lastKeyboardState = currentKeyboardState;
+            currentKeyboardState = Keyboard.GetState();
+        }
+
+        private static void UpdateMouseState()
+        {
+            lastMouseState = currentMouseState;
+            currentMouseState = Mouse.GetState();
         }
     }
 }
